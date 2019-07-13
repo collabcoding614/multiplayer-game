@@ -5,10 +5,10 @@ class Player {
     this.w = w;
     this.h = h;
     this.speed = 10;
+    this.xp = 0;
     this.id = id;
     this.color = color;
     this.isMoving = {};
-    this.xp = 0;
     this.isMain = main;
   }
 
@@ -18,7 +18,7 @@ class Player {
     if (this.isMoving.up) this.y -= this.speed;
     if (this.isMoving.down) this.y += this.speed;
     ctx.beginPath();
-    ctx.fillstyle = this.color;
+    ctx.fillStyle = this.color;
     ctx.fillRect(this.x, this.y, this.w, this.h);
 
     if (this.isMain) {
@@ -29,10 +29,11 @@ class Player {
     coins.forEach(v => {
       if (this.collide(v)) {
         this.xp += v.xpAdded;
-        v.destroyed = true;
+        v.destroyed = this.id;
       }
     });
   }
+
   move(dir) {
     this.isMoving[dir] = true;
   }
