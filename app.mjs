@@ -15,11 +15,17 @@ app.use(express.static(__dirname + "/"));
 
 app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"));
 
+import Coin from "./js/coin.mjs";
+
 const players = [];
+let coins = [];
+
+for (let i = 0; i < 20; i++)
+  coins.push(new Coin({ x: Math.random() * 800, y: Math.random() * 600 }));
 io.on("connection", socket => {
   console.log(socket.id);
 
-  socket.emit("init", { id: socket.id, plyrs: players });
+  socket.emit("init", { id: socket.id, plyrs: players, coins });
 
   socket.on("new-player", obj => {
     players.push(obj);
@@ -31,4 +37,9 @@ io.on("connection", socket => {
   socket.on("stop-player", dir =>
     socket.broadcast.emit("stop-player", { id: socket.id, dir })
   );
+
+  socket.on("destroy-item", id => {
+    coins = coins.filter(v => v.id !== id);
+    socket.broadcast.emit("destroy-item", id);
+  });
 });
