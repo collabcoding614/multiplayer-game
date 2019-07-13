@@ -1,10 +1,11 @@
 class Coin {
-  constructor({ x = 10, y = 10, w = 10, h = 10 }) {
+  constructor({ id, x = 10, y = 10, w = 10, h = 10 }) {
     this.x = x;
     this.y = y;
-    this.h = h;
     this.w = w;
+    this.h = h;
     this.xpAdded = 10;
+    this.id = id;
   }
 
   draw(ctx) {
