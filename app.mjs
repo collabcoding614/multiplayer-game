@@ -17,7 +17,7 @@ app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"));
 
 import Coin from "./js/coin.mjs";
 
-const players = [];
+let players = [];
 let coins = [];
 
 for (let i = 0; i < 20; i++)
@@ -47,5 +47,12 @@ io.on("connection", socket => {
       socket.emit("end-game", "win");
       socket.broadcast.emit("end-game", "lose");
     }
+  });
+
+  socket.on("disconnect", () => {
+    console.log("remove player");
+    socket.broadcast.emit("remove-player", socket.id);
+    players = players.filter(v => v.id !== socket.id);
+    console.log(players);
   });
 });

@@ -14,6 +14,7 @@ socket.on("init", ({ id, plyrs, coins }) => {
   socket.emit("new-player", player);
 
   players = plyrs.map(v => new Player(v)).concat(player);
+
   items = coins.map(v => new Coin(v));
 
   socket.on("new-player", obj => players.push(new Player(obj)));
@@ -25,9 +26,13 @@ socket.on("init", ({ id, plyrs, coins }) => {
   );
 
   socket.on("end-game", result => {
-    console.log(result);
     endGame = result;
   });
+
+  socket.on(
+    "remove-player",
+    id => (players = players.filter(v => v.id !== id))
+  );
 
   socket.on("destroy-item", id => (items = items.filter(v => v.id !== id)));
 
@@ -35,7 +40,6 @@ socket.on("init", ({ id, plyrs, coins }) => {
   const draw = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
-
     players.forEach(v => v.draw(ctx, items));
     items.forEach(v => {
       v.draw(ctx);
