@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "nodemon --experimental-modules app.mjs"
+  },
   "dependencies": {
     "express": "^4.17.1",
     "socket.io": "^2.2.0"

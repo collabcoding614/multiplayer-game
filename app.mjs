@@ -15,8 +15,20 @@ app.use(express.static(__dirname + "/"));
 
 app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"));
 
+const players = [];
 io.on("connection", socket => {
   console.log(socket.id);
 
-  socket.emit("init", "Your connected");
+  socket.emit("init", { id: socket.id, plyrs: players });
+
+  socket.on("new-player", obj => {
+    players.push(obj);
+    socket.broadcast.emit("new-player", obj);
+  });
+  socket.on("move-player", dir =>
+    socket.broadcast.emit("move-player", { id: socket.id, dir })
+  );
+  socket.on("stop-player", dir =>
+    socket.broadcast.emit("stop-player", { id: socket.id, dir })
+  );
 });
