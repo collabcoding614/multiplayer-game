@@ -1,5 +1,6 @@
 import Player from "./player.mjs";
 import controls from "./controls.mjs";
+import Coin from "./coin.mjs";
 
 const socket = io(),
   canvas = document.getElementById("game"),
