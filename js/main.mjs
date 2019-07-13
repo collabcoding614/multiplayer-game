@@ -41,7 +41,6 @@ socket.on("init", ({ id, plyrs, coins }) => {
     items.forEach(v => {
       v.draw(ctx);
       if (v.destroyed) {
-        console.log(v);
         socket.emit("destroy-item", { playerId: v.destroyed, coinId: v.id });
       }
     });

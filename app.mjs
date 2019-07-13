@@ -44,10 +44,7 @@ io.on("connection", socket => {
   );
 
   socket.on("destroy-item", ({ playerId, coinId }) => {
-    console.log(coinId);
-    console.log(coins.find(v => v.id === coinId));
     if (coins.find(v => v.id === coinId)) {
-      console.log("found coin");
       const player = players.find(v => v.id === playerId);
       const sock = io.sockets.connected[player.id];
       coins = coins.filter(v => v.id !== coinId);
@@ -55,7 +52,6 @@ io.on("connection", socket => {
       socket.broadcast.emit("destroy-item", coinId);
 
       sock.emit("update-player", player);
-      console.log(player.xp);
       if (player.xp === 100) {
         sock.emit("end-game", "win");
         sock.broadcast.emit("end-game", "lose");
