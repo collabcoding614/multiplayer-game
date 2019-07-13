@@ -13,7 +13,8 @@ const writeToCanvas = msg => {
 };
 
 let players = [],
-  items = [];
+  items = [],
+  endGame;
 socket.on("init", ({ id, plyrs, coins }) => {
   const player = new Player({ id, main: true });
   socket.emit("new-player", player);
@@ -28,6 +29,11 @@ socket.on("init", ({ id, plyrs, coins }) => {
   socket.on("stop-player", ({ id, dir }) =>
     players.find(v => v.id === id).stop(dir)
   );
+
+  socket.on("end-game", result => {
+    console.log(result);
+    endGame = result;
+  });
 
   socket.on("destroy-item", id => (items = items.filter(v => v.id !== id)));
 
@@ -44,9 +50,15 @@ socket.on("init", ({ id, plyrs, coins }) => {
       }
     });
 
+    if (endGame) {
+      ctx.fillStyle = endGame === "lose" ? "red" : "green";
+      ctx.font = "100px ariel";
+      ctx.fillText(`You ${endGame}!`, 100, 100);
+    }
+
     items = items.filter(v => !v.destroyed);
 
-    requestAnimationFrame(draw);
+    !endGame && requestAnimationFrame(draw);
   };
 
   draw();

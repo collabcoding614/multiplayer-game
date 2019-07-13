@@ -40,6 +40,12 @@ io.on("connection", socket => {
 
   socket.on("destroy-item", id => {
     coins = coins.filter(v => v.id !== id);
+    const player = players.find(v => v.id === socket.id);
+    player.xp += 10;
     socket.broadcast.emit("destroy-item", id);
+    if (player.xp === 100) {
+      socket.emit("end-game", "win");
+      socket.broadcast.emit("end-game", "lose");
+    }
   });
 });
